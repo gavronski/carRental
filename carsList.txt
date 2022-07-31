@@ -1,0 +1,22 @@
+Ford Mustang Shelby Super Snake coupe 2020 3D model
+Ford Mustang GT EU-spec coupe 2020 3D model
+Ford Mustang Bullitt coupe 2021
+Ford Mustang GT with HQ interior 1967 3D model
+Ford Mustang GT EU-spec fastback 2020
+Ford Mustang Mach-E GT 2020
+Ford Mustang Shelby GT500 KR coupe 2020
+Ford Mustang Shelby GT-H convertible 2022
+
+kolumny 
+marka 
+model 
+wersja 
+rok produkcji 
+pojemność 
+rodzaj paliwa 
+moc 
+skyrznia biegów 
+napęd 
+spalanie w mieście 
+typ nadwozia 
+kolor 
