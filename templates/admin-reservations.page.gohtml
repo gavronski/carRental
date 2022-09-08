@@ -1,0 +1,53 @@
+{{template "admin" .}}
+
+{{define "content"}}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Reservations</h1>
+</div>
+<div class="container">
+    <div class="row">
+        <table class="table table-striped" id="all-res">
+            {{$reservations := index .Data "res"}}
+            <tr>
+                <th>Reservation ID</th>
+                <th>User email</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Car ID</th>
+                <th>Car name</th>
+
+            </tr>
+
+            {{range $i, $res :=  $reservations}}
+
+            <tr>
+                <td>
+                    <a href="/admin/reservations/{{$res.ID}}">{{$res.ID}}</a>
+                </td>
+                <td>
+                    {{$res.Email}}
+                </td>
+                <td>
+                    {{$res.StartDate}}
+                </td>
+                <td>
+                    {{$res.EndDate}}
+                </td>
+                <td>
+                    {{$res.CarID}}
+                </td>
+                 <td>
+                    {{$res.Car.CarName}}
+                </td>
+            </tr>
+            {{end}}
+        </table>
+    </div>
+</div>
+{{end}}
+{{define "js"}}
+<script> 
+const dataTable = new simpleDatatables.DataTable("#all-res", {
+})
+</script>
+{{end}}

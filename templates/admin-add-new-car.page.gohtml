@@ -1,0 +1,153 @@
+{{template "admin" .}}
+
+{{define "content"}}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2 class="h2">Car details</h2>
+
+</div>
+<div class="container">
+    <div class="row">
+            {{$car := index .Data "car"}}
+
+        <form method="post" novalidate>
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+            <input type="hidden" name="car_id" value="{{$car.ID}}" />
+            <div class="row">
+                <div class="col col-s-1">
+                    <div class="form-group mt-3">
+                        <label for="car_name">Car Name:</label>
+                        {{with .Form.Errors.Get "car_name"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "car_name"}} is-invalid {{end}}"
+                            id="car_name" autocomplete="off" type='text' name='car_name' value="{{$car.CarName}}"
+                            required>
+                    </div>
+                </div>
+                <div class="col col-s-1">
+                    <div class="form-group mt-3">
+                        <label for="brand">Brand:</label>
+                        {{with .Form.Errors.Get "brand"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "brand"}} is-invalid {{end}}" id="brand"
+                            autocomplete="off" type='text' name='brand' value="{{$car.Brand}}" required>
+                    </div>
+                </div>
+                <div class="col col-s-1">
+                    <div class="form-group mt-3">
+                        <label for="model">Model:</label>
+                        {{with .Form.Errors.Get "model"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "model"}} is-invalid {{end}}" id="model"
+                            autocomplete="off" type='text' name='model' value="{{$car.Model}}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="version">Version:</label>
+                        {{with .Form.Errors.Get "version"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "version"}} is-invalid {{end}}" id="version"
+                            autocomplete="off" type='text' name='version' value="{{$car.Version}}" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="fuel">Fuel:</label>
+                        {{with .Form.Errors.Get "fuel"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "fuel"}} is-invalid {{end}}" id="fuel"
+                            autocomplete="off" type='text' name='fuel' value="{{$car.Fuel}}" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="power">Power:</label>
+                        {{with .Form.Errors.Get "power"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "power"}} is-invalid {{end}}" id="power"
+                            autocomplete="off" type='text' name='power' value="{{$car.Power}}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="gearbox">Gearbox:</label>
+                        {{with .Form.Errors.Get "gearbox"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "gearbox"}} is-invalid {{end}}" id="gearbox"
+                            autocomplete="off" type='text' name='gearbox' value="{{$car.Gearbox}}" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="made_at">Made at:</label>
+                        {{with .Form.Errors.Get "made_at"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "made_at"}} is-invalid {{end}}" id="made_at"
+                            autocomplete="off" type='text' name='made_at' value="{{$car.MadeAt}}" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="drive">Drive:</label>
+                        {{with .Form.Errors.Get "drive"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "drive"}} is-invalid {{end}}" id="drive"
+                            autocomplete="off" type='text' name='drive' value="{{$car.Drive}}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+
+                    <div class="form-group mt-3">
+                        <label for="combustion">Combustion:</label>
+                        {{with .Form.Errors.Get "combustion"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "combustion"}} is-invalid {{end}}"
+                            id="combustion" autocomplete="off" type='text' name='combustion' value="{{$car.Combustion}}"
+                            required>
+                    </div>
+                </div>
+                <div class="col">
+
+                    <div class="form-group mt-3">
+                        <label for="body">Body:</label>
+                        {{with .Form.Errors.Get "body"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "body"}} is-invalid {{end}}" id="body"
+                            autocomplete="off" type='text' name='body' value="{{$car.Body}}" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group mt-3">
+                        <label for="color">Color:</label>
+                        {{with .Form.Errors.Get "color"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "color"}} is-invalid {{end}}" id="color"
+                            autocomplete="off" type='text' name='color' value="{{$car.Color}}" required>
+                    </div>
+                </div>
+            </div>
+            
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+        </form>
+    </div>
+</div>
+{{end}}
+

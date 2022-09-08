@@ -1,0 +1,41 @@
+{{template "base" .}}
+
+{{define "content"}}
+ <div class="album py-5 bg-light">
+    <div class="container mt-5">
+      <div class="row justify-content-center row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      
+        <div class="col">
+            <form method="post">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}"/>
+                <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+                <div class="form-floating">
+                {{with .Form.Errors.Get "email"}}
+                        <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+               
+                </div>
+                <div class="form-floating">
+                {{with .Form.Errors.Get "password"}}
+                        <label class="text-danger">{{.}}</label>
+                {{end}}
+                <input type="password" name="password"class="form-control" id="floatingPassword" placeholder="Password">
+                </div>
+
+                <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                <p class="mt-5 mb-3 text-muted"></p>
+            </form>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+{{end}}

@@ -1,0 +1,36 @@
+{{template "admin" .}}
+
+{{define "content"}}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Car listing</h1>
+</div>
+<div class="container">
+    <div class="row">
+        <table class="table table-striped" id="all-cars">
+        {{$cars := index .Data "cars"}}
+        <tr>
+            <th>Car name</th>
+            <th>Color</th>
+            <th>Drive</th>
+            <th>Gearbox</th>
+        </tr>
+
+        {{range $i, $car :=  $cars}}
+
+            <tr>
+                <td><a href="/admin/cars/{{$car.ID}}"><b>{{$car.Brand}} {{$car.Model}}</b></a></td>
+                <td>{{$car.Color}}</td>
+                <td>{{$car.Drive}}</td>
+                <td>{{$car.Gearbox}}</td>
+            </tr>
+        {{end}}
+        </table>
+    </div>
+    </div>
+{{end}}
+{{define "js"}}
+<script> 
+const dataTable = new simpleDatatables.DataTable("#all-cars", {
+})
+</script>
+{{end}}

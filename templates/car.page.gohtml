@@ -1,106 +1,182 @@
 {{template "base" .}}
 
 {{define "content"}}
- <div class="container mt-5">
-                 <div class="row justify-content-center">
-                 <div class="col-sm-8">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true" height="100%">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-
-                        </div>
-                        <div class="carousel-inner" height="100%">
-                            <div class="carousel-item active">
-                                <img src="/static/images/bullitt1.jpg" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="/static/images/bullitt2.jpg" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="/static/images/bullitt3.jpg" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="/static/images/bullitt4.jpg" class="d-block w-100" alt="...">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                        </div>
-                    </div>
-                     <div class="col mt-5">
-                       <form action="/search-avability" method="get">
-                          <div class="row justify-content-center">
-                              <div class="col-6">
-                                <input class="form-control" type="date" name="start">
-                              </div>
-                              <div class="col-6">
-                                <input class="form-control" type="date" name="end">  
-                              </div>
-                              <button class="btn btn-primary col-4 mt-3" type="submit">Check</button>
-                          </div>
-                       </form>
-                 </div>
+<div class="container mt-5">
+    {{$car := index .Data "car"}}
     <div class="row justify-content-center">
-                <div class="col">
-                    <table class="table table-light table-striped">
-                        <tbody>
-                            <tr>
-                            <th>marka</th>
-                            <td>Ford</td>
-                            </tr>
-                            <tr>
-                            <th>model</th>
-                            <td>mustang</td>
-                            </tr>
-                            <tr>
-                            <th>model</th>
-                            <td>mustang</td>
-                            </tr>
-                            <tr>
-                            <th>ersja</th>
-                            <td>coupe</td>
-                            </tr>
-                            <tr>
-                            <th>rodzaj paliwa</th>
-                            <td>benzyna</td>
-                            </tr>
-                            <tr>
-                            <th>pojemność</th>
-                            <td>2300cm3</td>
-                            </tr>
-                            <tr>
-                            <th>napęd</th>
-                            <td>na tylne koła</td>
-                            </tr>
-                            <tr>
-                            <th>skrzynia biegów</th>
-                            <td>manualna</td>
-                            </tr>
-                            <tr>
-                            <th>spalanie w mieście</th>
-                            <td>11l/100km</td>
-                            </tr>
-                            <tr>
-                            <th>typ nadwozia</th>
-                            <td>coupe</td>
-                            </tr>
-                            <tr>
-                            <th>kolor</th>
-                            <td>red</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                 </div>
-    </div>
+        <div class="col-sm-8">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true" height="100%">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                        class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                        aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+                        aria-label="Slide 4"></button>
 
+                </div>
+                <div class="carousel-inner" height="100%">
+                    <div class="carousel-item active">
+                        <img src="/static/images/{{$car.CarName}}1.jpg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/static/images/{{$car.CarName}}2.jpg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/static/images/{{$car.CarName}}3.jpg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/static/images/{{$car.CarName}}4.jpg" class="d-block w-100" alt="...">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="col mt-5 custom">
+            <form method="get">
+
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <input class="form-control" type="date" name="start">
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control" type="date" name="end">
+                    </div>
+                    <button id="check" class="btn btn-primary col-4 mt-3" type="submit" data-toggle="modal"
+                        data-target="#myModal">Check</button>
+                </div>
+            </form>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col">
+
+                <table class="table table-light table-striped">
+                    <tbody>
+                        <tr>
+                            <th>Brand</th>
+                            <td>{{$car.Brand}}</td>
+                        </tr>
+                        <tr>
+                            <th>Model</th>
+                            <td>{{$car.Model}}</td>
+                        </tr>
+                        <tr>
+                            <th>Version</th>
+                            <td>{{$car.Version}}</td>
+                        </tr>
+                        <tr>
+                            <th>Made at</th>
+                            <td>{{$car.MadeAt}}</td>
+                        </tr>
+                        <th>Fuel</th>
+                        <td>{{$car.Fuel}}</td>
+                        </tr>
+                        <th>Power</th>
+                        <td>{{$car.Power}}</td>
+                        </tr>
+                        <tr>
+                            <th>Gearbox</th>
+                            <td>{{$car.Gearbox}}</td>
+                        </tr>
+                        <tr>
+                            <th>Drive</th>
+                            <td>{{$car.Drive}}</td>
+                        </tr>
+                        <tr>
+                            <th>Combustion</th>
+                            <td>{{$car.Combustion}}</td>
+                        </tr>
+                        <tr>
+                            <th>Body</th>
+                            <td>{{$car.Body}}
+                        </tr>
+                        <tr>
+                            <th>Color</th>
+                            <td>{{$car.Color}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{end}}
+{{define "js"}}
+<script>
+    modalOK = '<div class="modal" id="myModal" tabindex="-1"> \
+<div class="modal-dialog"> \
+    <div class="modal-content"> \
+      <div class="modal-header justify-content-center"> \
+        <h5 class="modal-title">Car is available</h5> \
+      </div> \
+      <div class="modal-body"> \
+        <img src="/static/images/ok.png" class="d-block w-100 ok" alt="..."> \
+      </div> \
+      <div class="modal-footer"> \
+        <a href="/make-reservation" type="button" class="btn btn-primary">Choose car</a> \
+        <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
+      </div> \
+    </div> \
+  </div> \
+</div>';
+    modalNO = '<div class="modal" id="myModal" tabindex="-1"> \
+<div class="modal-dialog"> \
+    <div class="modal-content"> \
+      <div class="modal-header justify-content-center"> \
+        <h5 class="modal-title">Car is unavailable</h5> \
+      </div> \
+      <div class="modal-body justify-content-center"> \
+        <img src="/static/images/no.jpg" class="d-block w-100 ok" alt="..."> \
+      </div> \
+      <div class="modal-footer justify-content-center"> \
+        <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Change date</button> \
+      </div> \
+    </div> \
+  </div> \
+</div>';
+    $("#check").click(function (e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+            }
+        });
+        e.preventDefault();
+        $.ajax({
+            type: "post",
+            url: "/check-availability",
+            data: {
+                start: $('input[name="start"]').val(),
+                end: $('input[name="end"]').val()
+            },
+            dataType: 'json',
+            success: function (resp) {
+                if (resp.ok) {
+                    $('body').append(modalOK)
+                } else {
+                    $('body').append(modalNO)
+                }
+                $('.modal').show()
+                $('.navbar, .container').css("opacity","0.1")
+                $('.close').on('click', function() {
+                    $('.modal').hide()
+                    $('.modal').remove()
+                    $('.navbar, .container').css("opacity","1")
+                })
+            }
+        })
+    })
+</script>
 {{end}}
