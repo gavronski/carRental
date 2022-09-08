@@ -1,20 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"myapp/internal/helpers"
 	"net/http"
 
 	"github.com/justinas/nosurf"
 )
-
-func WriteToConsole(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("hit the page")
-		fmt.Println("Response", w)
-		fmt.Println("Request", *r)
-		next.ServeHTTP(w, r)
-	})
-}
 
 func NoSurf(next http.Handler) http.Handler {
 	csrfHandler := nosurf.New(next)
@@ -29,4 +20,14 @@ func NoSurf(next http.Handler) http.Handler {
 
 func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
+}
+
+func Auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !helpers.IsAuthanticated(r) {
+			session.Put(r.Context(), "error", "login first")
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+		}
+		next.ServeHTTP(w, r)
+	})
 }
