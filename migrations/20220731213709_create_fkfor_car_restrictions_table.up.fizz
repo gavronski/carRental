@@ -1,0 +1,9 @@
+add_foreign_key("car_restrictions", "car_id", {"cars": ["id"]}, {
+    "on_delete": "cascade",
+    "on_update": "cascade",
+})
+
+add_foreign_key("car_restrictions", "restriction_id", {"restrictions": ["id"]}, {
+    "on_delete": "cascade",
+    "on_update": "cascade",
+})

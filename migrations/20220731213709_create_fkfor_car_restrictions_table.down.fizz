@@ -1,0 +1,2 @@
+drop_foreign_key("car_restrictions", "car_restrictions_cars_id_fk", {})
+drop_foreign_key("car_restrictions", "car_restrictions_restrictions_id_fk", {})

@@ -1,0 +1,3 @@
+add_index("car_restrictions", ["start_date", "end_date"], {})
+add_index("car_restrictions", "car_id", {})
+add_index("car_restrictions", "reservation_id", {})

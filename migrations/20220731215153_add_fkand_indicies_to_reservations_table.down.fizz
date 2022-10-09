@@ -1,0 +1,4 @@
+drop_foreign_key("car_restrictions", "car_restrictions_reservations_id_fk", {})
+
+drop_index("reservations", "reservations_email_idx")
+drop_index("reservations", "reservations_last_name_idx")

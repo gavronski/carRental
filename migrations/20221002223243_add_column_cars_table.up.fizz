@@ -1,0 +1,1 @@
+add_column("cars", "price", "integer", {"default":0})

@@ -1,0 +1,3 @@
+drop_index("car_restrictions", "car_restrictions_reservation_id_idx")
+drop_index("car_restrictions", "car_restrictions_car_id_idx")
+drop_index("car_restrictions", "car_restrictions_start_date_end_date_idx")

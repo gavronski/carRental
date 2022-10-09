@@ -1,0 +1,15 @@
+create_table("cars") {
+  t.Column("id", "integer", {primary:true})
+  t.Column("car_name", "string", {})
+  t.Column("brand", "string", {})
+  t.Column("model", "string", {})
+  t.Column("version", "string", {})
+  t.Column("made_at", "string", {})
+  t.Column("fuel", "string", {})
+  t.Column("power", "integer", {})
+  t.Column("gearbox", "string", {"default":"manual"})
+  t.Column("drive", "string", {})
+  t.Column("combustion", "string", {})
+  t.Column("body", "string", {})
+  t.Column("color", "string", {})
+}
