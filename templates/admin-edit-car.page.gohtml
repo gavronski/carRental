@@ -1,5 +1,4 @@
 {{template "admin" .}}
-
 {{define "content"}}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h2 class="h2">Car details</h2>
@@ -7,16 +6,13 @@
 <div class="container">
     <div class="row">
         {{$car := index .Data "car"}}
-    
         <form method="post" novalidate>
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
-            <input type="hidden" name="flash" value="{{.Flash}}" />
-
             <input type="hidden" name="car_id" id="car_id" value="{{$car.ID}}" />
             <div class="row">
                 <div class="col col-s-1">
                     <div class="form-group mt-3">
-                        <label for="car_name">Car Name:</label>
+                        <label for="car_name"><b>Car Name:</b></label>
                         {{with .Form.Errors.Get "car_name"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -27,7 +23,7 @@
                 </div>
                 <div class="col col-s-1">
                     <div class="form-group mt-3">
-                        <label for="brand">Brand:</label>
+                        <label for="brand"><b>Brand:</b></label>
                         {{with .Form.Errors.Get "brand"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -37,7 +33,7 @@
                 </div>
                 <div class="col col-s-1">
                     <div class="form-group mt-3">
-                        <label for="model">Model:</label>
+                        <label for="model"><b>Model:</b></label>
                         {{with .Form.Errors.Get "model"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -49,7 +45,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="version">Version:</label>
+                        <label for="version"><b>Version:</b></label>
                         {{with .Form.Errors.Get "version"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -59,7 +55,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="fuel">Fuel:</label>
+                        <label for="fuel"><b>Fuel:</b></label>
                         {{with .Form.Errors.Get "fuel"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -69,7 +65,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="power">Power:</label>
+                        <label for="power"><b>Power:</b></label>
                         {{with .Form.Errors.Get "power"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -81,7 +77,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="gearbox">Gearbox:</label>
+                        <label for="gearbox"><b>Gearbox:</b></label>
                         {{with .Form.Errors.Get "gearbox"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -91,7 +87,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="made_at">Made at:</label>
+                        <label for="made_at"><b>Made at:</b></label>
                         {{with .Form.Errors.Get "made_at"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -101,7 +97,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="drive">Drive:</label>
+                        <label for="drive"><b>Drive:</b></label>
                         {{with .Form.Errors.Get "drive"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -114,7 +110,7 @@
                 <div class="col">
 
                     <div class="form-group mt-3">
-                        <label for="combustion">Combustion:</label>
+                        <label for="combustion"><b>Combustion:</b></label>
                         {{with .Form.Errors.Get "combustion"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -126,7 +122,7 @@
                 <div class="col">
 
                     <div class="form-group mt-3">
-                        <label for="body">Body:</label>
+                        <label for="body"><b>Body:</b></label>
                         {{with .Form.Errors.Get "body"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -136,7 +132,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group mt-3">
-                        <label for="color">Color:</label>
+                        <label for="color"><b>Color:</b></label>
                         {{with .Form.Errors.Get "color"}}
                         <label class="text-danger">{{.}}</label>
                         {{end}}
@@ -144,10 +140,41 @@
                             autocomplete="off" type='text' name='color' value="{{$car.Color}}" required>
                     </div>
                 </div>
+                 <div class="row">
+                <div class="col col-s-1 col-md-3 col-lg-4">
+                    <div class="form-group mt-3">
+                        <label for="combustion"><b>Price:</b></label>
+                        {{with .Form.Errors.Get "price"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get "price"}} is-invalid {{end}}"
+                            id="price" autocomplete="off" type='text' name='price' value="{{$car.Price}}"
+                            required>
+                    </div>
+                </div>
+            </div>
             </div>
 
             <input type="submit" class="btn btn-success" value="Save" />
             <button class="btn btn-danger" id="delete-btn">Delete</button>
+            <hr>
+            <h4>Images<h4>
+            <div class="row">
+                    <div class="col-3 border p-0">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <button type="button" class="btn btn-outline-success" id="upload-file">Upload</button>
+                        </div>
+                        <img src="/static/images/image-icon.png" class="d-block w-100" alt="...">
+                    </div>
+                     {{range $i, $filename  := $car.Images}}
+                     <div class="col-3 border p-0">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <button type="button" class="btn btn-outline-danger delete-image-btn" id="{{$i}}-delete-image-btn">Delete</button>
+                        </div>
+                        <img src="/static/images/{{$filename}}" class="d-block w-100" id="{{$i}}-delete-image-img"alt="...">
+                    </div>
+                     {{end}}
+            </div>
         </form>
     </div>
 </div>
@@ -196,26 +223,82 @@
             type: "post",
             url: "/admin/cars/delete/" + id,
             success: function (resp) {
-                window.location.href = "/admin/cars"
-                  const Toast = Swal.mixin({
-  toast: true,
-  position: 'top-end',
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener('mouseenter', Swal.stopTimer)
-    toast.addEventListener('mouseleave', Swal.resumeTimer)
-  }
-})
+                if (resp.ok) {
+                    window.location.href = "/admin/cars"
+                    } 
+                }
+            })
+        })
+    })
 
-Toast.fire({
-  icon: 'success',
-  title: 'Signed in successfully'
-})
-            }
+        modalImage = '<div class="modal" id="myModalImage" tabindex="-1"> \
+<div class="modal-dialog"> \
+    <div class="modal-content"> \
+      <div class="modal-header justify-content-center"> \
+        <h6 class="modal-title">Upload an image</h6> \
+      </div> \
+      <div class="modal-body"> \
+        <form action="/admin/upload-image" method="post" enctype="multipart/form-data"> \
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" /> \
+            Select image to upload: \
+            <div class="mb-3"> \
+                <label for="formFile" class="form-label">Default file input example</label> \
+                <input class="form-control" type="file" name="formFile" id="formFile"> \
+                <input hidden class="form-control" type="text" name="car_id" value="' + id +'"> \
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submit-upload">Upload</button> \
+                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
+            </div> \
+        </form> \
+      </div> \
+    </div> \
+  </div> \
+</div>';
+    $("#upload-file").click(function (e) {
+            e.preventDefault()
+
+        $('body').append(modalImage)
+        $('.modal').show()
+        $('.navbar, .container').css("opacity", "0.1")
+        $('.close').on('click', function () {
+            $('.modal').hide()
+            $('.modal').remove()
+            $('.navbar, .container').css("opacity", "1")
         })
-        })
+    })
+
+    $(".delete-image-btn").click(function (e) {
+            e.preventDefault()
+            id = e.target.id.replace("btn", "img")
+            img = document.getElementById(id)
+            path = img.getAttribute("src")
+
+            modalDelImage = '<div class="modal" id="myModalDelImage" tabindex="-1"> \
+<div class="modal-dialog"> \
+    <div class="modal-content"> \
+      <div class="modal-header justify-content-center"> \
+        <h6 class="modal-title">Delete an image?</h6> \
+      </div> \
+      <div class="modal-body"> \
+        <form action="/admin/delete-image" method="post"> \
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" /> \
+            <div class="mb-3"> \
+                <input hidden class="form-control" type="text" name="del_image" value="' + path +'"> \
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Delete</button> \
+                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
+            </div> \
+        </form> \
+      </div> \
+    </div> \
+  </div> \
+</div>';
+            $('body').append(modalDelImage)
+            $('.modal').show()
+            $('.navbar, .container').css("opacity", "0.1")
+            $('.close').on('click', function () {
+                $('.modal').hide()
+                $('.modal').remove()
+                $('.navbar, .container').css("opacity", "1")
+            })
     })
 </script>
 {{end}}

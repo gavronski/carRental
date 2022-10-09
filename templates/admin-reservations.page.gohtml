@@ -1,11 +1,10 @@
 {{template "admin" .}}
-
 {{define "content"}}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Reservations</h1>
 </div>
 <div class="container">
-    <div class="row">
+    <div class="row table-responsive">
         <table class="table table-striped" id="all-res">
             {{$reservations := index .Data "res"}}
             <tr>
@@ -15,9 +14,9 @@
                 <th>End date</th>
                 <th>Car ID</th>
                 <th>Car name</th>
+                <th>Cost</th>
 
             </tr>
-
             {{range $i, $res :=  $reservations}}
 
             <tr>
@@ -36,8 +35,11 @@
                 <td>
                     {{$res.CarID}}
                 </td>
-                 <td>
+                <td>
                     {{$res.Car.CarName}}
+                </td>
+                 <td>
+                    {{$res.Cost}}
                 </td>
             </tr>
             {{end}}
@@ -46,8 +48,7 @@
 </div>
 {{end}}
 {{define "js"}}
-<script> 
-const dataTable = new simpleDatatables.DataTable("#all-res", {
-})
+<script>
+    const dataTable = new simpleDatatables.DataTable("#all-res", {})
 </script>
 {{end}}

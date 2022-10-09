@@ -110,8 +110,10 @@
                 last_name: $('input[name="last_name"]').val(),
             },
             success: function (resp) {
-                window.location.href = "/admin/dashboard"
-                }
+                 if (resp.ok) {
+                       window.location.href = "/admin/dashboard"
+                        } 
+                    }
             })
         })
     })

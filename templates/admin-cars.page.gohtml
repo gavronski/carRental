@@ -18,7 +18,7 @@
         {{range $i, $car :=  $cars}}
 
             <tr>
-                <td><a href="/admin/cars/{{$car.ID}}"><b>{{$car.Brand}} {{$car.Model}}</b></a></td>
+                <td><a href="/admin/cars/edit/{{$car.ID}}"><b>{{$car.Brand}} {{$car.Model}}</b></a></td>
                 <td>{{$car.Color}}</td>
                 <td>{{$car.Drive}}</td>
                 <td>{{$car.Gearbox}}</td>
