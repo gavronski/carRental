@@ -1,0 +1,23 @@
+mode: set
+myapp/internal/render/render.go:21.39,23.2 1 1
+myapp/internal/render/render.go:25.84,31.2 5 1
+myapp/internal/render/render.go:34.99,36.18 2 1
+myapp/internal/render/render.go:42.2,44.9 2 1
+myapp/internal/render/render.go:49.2,57.16 5 1
+myapp/internal/render/render.go:61.2,61.12 1 1
+myapp/internal/render/render.go:36.18,38.3 1 0
+myapp/internal/render/render.go:38.8,40.3 1 1
+myapp/internal/render/render.go:44.9,47.3 1 0
+myapp/internal/render/render.go:57.16,60.3 2 0
+myapp/internal/render/render.go:64.67,69.16 3 1
+myapp/internal/render/render.go:73.2,73.29 1 1
+myapp/internal/render/render.go:101.2,101.21 1 1
+myapp/internal/render/render.go:69.16,71.3 1 0
+myapp/internal/render/render.go:73.29,80.17 3 1
+myapp/internal/render/render.go:85.3,86.17 2 1
+myapp/internal/render/render.go:90.3,90.23 1 1
+myapp/internal/render/render.go:97.3,97.21 1 1
+myapp/internal/render/render.go:80.17,82.4 1 0
+myapp/internal/render/render.go:86.17,88.4 1 0
+myapp/internal/render/render.go:90.23,93.18 2 1
+myapp/internal/render/render.go:93.18,95.5 1 0

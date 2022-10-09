@@ -1,0 +1,19 @@
+mode: set
+myapp/internal/forms/errors.go:6.44,8.2 1 1
+myapp/internal/forms/errors.go:11.42,14.18 2 1
+myapp/internal/forms/errors.go:18.2,18.14 1 1
+myapp/internal/forms/errors.go:14.18,16.3 1 1
+myapp/internal/forms/form.go:19.29,21.2 1 1
+myapp/internal/forms/form.go:22.33,27.2 1 1
+myapp/internal/forms/form.go:29.43,30.31 1 1
+myapp/internal/forms/form.go:30.31,32.37 2 1
+myapp/internal/forms/form.go:32.37,34.4 1 1
+myapp/internal/forms/form.go:39.56,41.13 2 1
+myapp/internal/forms/form.go:45.2,45.13 1 1
+myapp/internal/forms/form.go:41.13,44.3 2 1
+myapp/internal/forms/form.go:48.74,50.21 2 1
+myapp/internal/forms/form.go:54.2,54.13 1 1
+myapp/internal/forms/form.go:50.21,53.3 2 1
+myapp/internal/forms/form.go:57.43,58.40 1 1
+myapp/internal/forms/form.go:62.2,62.13 1 1
+myapp/internal/forms/form.go:58.40,61.3 2 1
