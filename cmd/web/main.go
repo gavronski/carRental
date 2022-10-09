@@ -11,7 +11,6 @@ import (
 	"myapp/internal/models"
 	"myapp/internal/render"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
@@ -27,36 +26,36 @@ var errorLog *log.Logger
 func main() {
 	db, err := run()
 	fmt.Println(fmt.Sprintf("Starting an app on port num %s", portNumber))
-	// _ = if ts error i dont care
-	// _ = http.ListenAndServe(portNumber, nil)
+	// Server settings
 	srv := &http.Server{
 		Addr:    portNumber,
 		Handler: routes(&app),
 	}
 	defer db.SQL.Close()
 	defer close(app.MailChan)
-
+	// Start listen
 	listenForMail()
 	err = srv.ListenAndServe()
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 }
 
+// run sets app attributes, creates session and returns driver
 func run() (*driver.DB, error) {
+	// Register models
 	gob.Register(models.Reservation{})
 	gob.Register(models.User{})
 	gob.Register(models.Car{})
 	gob.Register(models.Restriction{})
 
+	// Create channel for mails
 	mailChan := make(chan models.MailData)
 	app.MailChan = mailChan
-	app.InProduction = false
-	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	app.InfoLog = infoLog
-	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-	app.ErrorLog = errorLog
 
+	app.InProduction = false
+
+	// Create a seesion
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
@@ -64,7 +63,7 @@ func run() (*driver.DB, error) {
 	session.Cookie.Secure = app.InProduction
 	app.Session = session
 
-	//connect to database
+	// Connect to database
 	log.Println("Connecting to databse ...")
 	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=car_rental user=postgres password=root")
 	if err != nil {
@@ -72,13 +71,11 @@ func run() (*driver.DB, error) {
 	}
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Println("Błąd z cachem tempalta")
+		log.Println("Chache rendering error", err)
 	}
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	//zwraca strukturę repozytorium
-	// repo := handlers.NewRepo(&app, db)
 	repo := handlers.NewRepo(&app, db)
 	helpers.NewHelpers(&app)
 	handlers.NewHandlers(repo)
