@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"unicode"
 
 	"github.com/asaskevich/govalidator"
 )
@@ -35,7 +36,7 @@ func (f *Form) Required(fields ...string) {
 	}
 }
 
-//Has checks if form field is in post and not empty
+// Has checks if form field is in post and not empty
 func (f *Form) Has(field string, r *http.Request) bool {
 	x := f.Get(field)
 	if x == "" {
@@ -45,6 +46,7 @@ func (f *Form) Has(field string, r *http.Request) bool {
 	return true
 }
 
+// MinLength checks if given field has admissible length
 func (f *Form) MinLength(field string, length int, r *http.Request) bool {
 	x := f.Get(field)
 	if len(x) < length {
@@ -54,9 +56,20 @@ func (f *Form) MinLength(field string, length int, r *http.Request) bool {
 	return true
 }
 
+// IsEmail checks if given field is an email
 func (f *Form) IsEmail(field string) bool {
 	if !govalidator.IsEmail(f.Get(field)) {
 		f.Errors.Add(field, "Invalid email address")
+		return false
+	}
+	return true
+}
+
+// IsNum checks if given field is a number
+func (f *Form) IsNum(field string) bool {
+	char := []rune(f.Get(field))
+	if !unicode.IsNumber(char[0]) {
+		f.Errors.Add(field, "This field must be a number")
 		return false
 	}
 	return true
