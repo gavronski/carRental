@@ -11,6 +11,7 @@ import (
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
+// ListenForMail sets value for message
 func listenForMail() {
 	go func() {
 		for {
@@ -20,6 +21,7 @@ func listenForMail() {
 	}()
 }
 
+// SendMsg sends email to customer
 func sendMsg(m models.MailData) {
 	server := mail.NewSMTPClient()
 	server.Host = "localhost"
@@ -28,6 +30,7 @@ func sendMsg(m models.MailData) {
 	server.ConnectTimeout = 10 * time.Second
 	server.SendTimeout = 10 * time.Second
 
+	// Create mail client
 	client, err := server.Connect()
 	if err != nil {
 		errorLog.Println(err)
