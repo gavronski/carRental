@@ -11,9 +11,12 @@ import (
 	"myapp/internal/models"
 	"myapp/internal/render"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
+	"github.com/joho/godotenv"
 )
 
 const portNumber = ":8088"
@@ -53,7 +56,23 @@ func run() (*driver.DB, error) {
 	mailChan := make(chan models.MailData)
 	app.MailChan = mailChan
 
-	app.InProduction = false
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	dbName := os.Getenv("DB_NAME")
+	dbPass := os.Getenv("DB_PASS")
+	dbUser := os.Getenv("DB_USER")
+	dbPort := os.Getenv("DB_PORT")
+	dbHost := os.Getenv("DB_HOST")
+	dbSSL := os.Getenv("DB_SSL")
+
+	cacheENV := os.Getenv("CACHE")
+	useCache, _ := strconv.ParseBool(cacheENV)
+	prodENV := os.Getenv("IN_PRODUCTION")
+	inProduction, _ := strconv.ParseBool(prodENV)
+	app.InProduction = inProduction
 
 	// Create a seesion
 	session = scs.New()
@@ -65,7 +84,8 @@ func run() (*driver.DB, error) {
 
 	// Connect to database
 	log.Println("Connecting to databse ...")
-	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=car_rental user=postgres password=root")
+	connectionString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", dbHost, dbPort, dbName, dbUser, dbPass, dbSSL)
+	db, err := driver.ConnectSQL(connectionString)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,7 +94,7 @@ func run() (*driver.DB, error) {
 		log.Println("Chache rendering error", err)
 	}
 	app.TemplateCache = tc
-	app.UseCache = false
+	app.UseCache = useCache
 
 	repo := handlers.NewRepo(&app, db)
 	helpers.NewHelpers(&app)
