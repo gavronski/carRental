@@ -11,17 +11,65 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// CarSet represents slice of model.Car
+type CarSet struct {
+	cars []models.Car
+}
+
+// init add first element to the cars
+func (c *CarSet) init() {
+	car := models.Car{}
+	c.cars = append(c.cars, car)
+}
+
+// contains checks if ccar.ID  (exists) is an index in cars slice
+func (c *CarSet) contains(id int) bool {
+	contains := false
+	count := len(c.cars)
+
+	for i := 0; i < count; i++ {
+		if i == id {
+			contains = true
+			break
+		}
+	}
+
+	return contains
+}
+
+// setCarsWithImages sets all images for car model
+func (c *CarSet) setCarsWithImages(car models.Car) {
+	if !c.contains(car.ID) {
+		car.Images = append(car.Images, car.Image)
+		c.cars = append(c.cars, car)
+	} else {
+		c.cars[car.ID].Images = append(c.cars[car.ID].Images, car.Image)
+	}
+}
+
+// getCarsWithImages returns slice of non-empty cars
+func (c *CarSet) getCarsWithImages() []models.Car {
+	return c.cars[1:]
+}
+
 // GetAllCars selects car listing
 func (m *postgresDBRepo) GetAllCars() ([]models.Car, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	carSet := &CarSet{}
+	carSet.init()
+
 	var cars []models.Car
+
 	query := `
 	select 
-		c.id, c.car_name, c.brand, c.model, c.color, c.gearbox, c.drive
+		c.id, c.car_name, c.brand, c.model, c.color, c.gearbox, c.drive,
+		i.filename
 	from 
-		cars c;
+		cars c
+	left join images i on(i.car_id = c.id)
+		order by c.id;
 	`
 	rows, err := m.DB.QueryContext(ctx, query)
 
@@ -39,55 +87,21 @@ func (m *postgresDBRepo) GetAllCars() ([]models.Car, error) {
 			&car.Color,
 			&car.Gearbox,
 			&car.Drive,
+			&car.Image,
 		)
 
 		if err != nil {
 			return cars, err
 		}
 
-		cars = append(cars, car)
+		carSet.setCarsWithImages(car)
 	}
 
 	if err = rows.Err(); err != nil {
 		return cars, err
 	}
 
-	return cars, nil
-}
-
-// GetCarByName returns car by given name
-func (m *postgresDBRepo) GetCarByName(carName string) (models.Car, error) {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	var car models.Car
-	query := `select * from cars where car_name = $1;`
-	row := m.DB.QueryRowContext(ctx, query, carName)
-	err := row.Scan(
-		&car.ID,
-		&car.CarName,
-		&car.Brand,
-		&car.Model,
-		&car.Version,
-		&car.MadeAt,
-		&car.Fuel,
-		&car.Power,
-		&car.Gearbox,
-		&car.Drive,
-		&car.Combustion,
-		&car.Body,
-		&car.Color,
-		&car.UpdatedAt,
-		&car.CreatedAt,
-		&car.Price,
-	)
-
-	if err != nil {
-		return car, err
-	}
-
-	return car, nil
+	return carSet.getCarsWithImages(), nil
 }
 
 // GetCarByID returns car by given ID
@@ -95,32 +109,55 @@ func (m *postgresDBRepo) GetCarByID(carID int) (models.Car, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	var car models.Car
+	var car = models.Car{}
+	images := []string{}
 
-	query := `select * from cars where id = $1;`
-	row := m.DB.QueryRowContext(ctx, query, carID)
-	err := row.Scan(
-		&car.ID,
-		&car.CarName,
-		&car.Brand,
-		&car.Model,
-		&car.Version,
-		&car.MadeAt,
-		&car.Fuel,
-		&car.Power,
-		&car.Gearbox,
-		&car.Drive,
-		&car.Combustion,
-		&car.Body,
-		&car.Color,
-		&car.UpdatedAt,
-		&car.CreatedAt,
-		&car.Price,
-	)
+	carSet := &CarSet{}
+	carSet.init()
+	// query := `select * from cars where id = $1;`
+	query := `
+		select
+			c.*, i.filename
+		from
+		cars c
+			left join images i on(i.car_id = c.id)
+		where c.id = $1
+			order by c.id
+		`
+	rows, err := m.DB.QueryContext(ctx, query, carID)
+	for rows.Next() {
+		err = rows.Scan(
+			&car.ID,
+			&car.CarName,
+			&car.Brand,
+			&car.Model,
+			&car.Version,
+			&car.MadeAt,
+			&car.Fuel,
+			&car.Power,
+			&car.Gearbox,
+			&car.Drive,
+			&car.Combustion,
+			&car.Body,
+			&car.Color,
+			&car.UpdatedAt,
+			&car.CreatedAt,
+			&car.Price,
+			&car.Image,
+		)
 
-	if err != nil {
+		if err != nil {
+			return car, err
+		}
+
+		images = append(images, car.Image)
+	}
+
+	if err = rows.Err(); err != nil {
 		return car, err
 	}
+
+	car.Images = images
 
 	return car, nil
 }
@@ -130,7 +167,6 @@ func (m *postgresDBRepo) GetReservationByID(reservationID int) (models.Reservati
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	log.Println()
 	var reservation models.Reservation
 
 	query := `select * from reservations where id = $1`
@@ -196,7 +232,11 @@ func (m *postgresDBRepo) UpdateCar(car models.Car) error {
 func (m *postgresDBRepo) AddCar(car models.Car) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	id, err := m.GetMax()
+	id, err := m.GetMaxCarID()
+
+	if err != nil {
+		return err
+	}
 	id = id + 1
 
 	power, _ := strconv.Atoi(car.Power)
@@ -474,7 +514,7 @@ func (m *postgresDBRepo) GetReservations() ([]models.Reservation, error) {
 }
 
 // GetMax retruns max id from reservations table
-func (m *postgresDBRepo) GetMax() (int, error) {
+func (m *postgresDBRepo) GetMaxCarID() (int, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -491,4 +531,68 @@ func (m *postgresDBRepo) GetMax() (int, error) {
 	}
 
 	return id, nil
+}
+
+func (m *postgresDBRepo) GetMaxImageID() (int, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var id int
+	query := `select max(id) as id from images;`
+	row := m.DB.QueryRowContext(ctx, query)
+	err := row.Scan(
+		&id,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func (m *postgresDBRepo) InsertCarImage(image models.Image) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	maxID, err := m.GetMaxImageID()
+	maxID = maxID + 1
+
+	if err != nil {
+		return 0, err
+	}
+	var newID int
+
+	stmt := `insert into images (id, car_id, filename, updated_at, created_at) 
+	values ($1, $2, $3, $4, $5) returning id;`
+
+	err = m.DB.QueryRowContext(ctx, stmt,
+		maxID,
+		image.CarID,
+		image.Filename,
+		time.Now(),
+		time.Now(),
+	).Scan(&newID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return newID, nil
+}
+
+func (m *postgresDBRepo) DeleteImage(filename string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `delete from images where filename = $1`
+
+	_, err := m.DB.ExecContext(ctx, stmt, filename)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

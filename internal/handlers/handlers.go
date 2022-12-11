@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"myapp/internal/config"
 	"myapp/internal/driver"
 	"myapp/internal/forms"
@@ -21,7 +21,8 @@ import (
 
 // Repo the repository used by the handlers
 var Repo *Repository
-var currentCarName string
+
+var uploadPath = "./static/images/"
 
 // Repository is the repository type
 type Repository struct {
@@ -71,14 +72,12 @@ func (m *Repository) Cars(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find front image for all cars
-	for i := range cars {
-		id := strconv.Itoa(cars[i].ID)
-		paths, _ := filepath.Glob(fmt.Sprintf("%s*", "./static/images/"+id+"-1"))
-		cars[i].Filename = "image-icon.png"
-		if len(paths) > 0 {
-			path := paths[0]
-			filename := filepath.Base(path)
-			cars[i].Filename = filename
+	for i, car := range cars {
+		// If car has no image set default
+		if len(car.Images) == 0 {
+			cars[i].Image = fmt.Sprintf("%s%s", uploadPath, "image-icon.png")
+		} else {
+			cars[i].Image = fmt.Sprintf("%s%s", uploadPath, car.Images[0])
 		}
 	}
 
@@ -103,16 +102,11 @@ func (m *Repository) Car(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	paths, _ := filepath.Glob(fmt.Sprintf("%s-*", "./static/images/"+id))
-
-	// Get all images for a car
-	for _, path := range paths {
-		filename := filepath.Base(path)
-		car.Images = append(car.Images, filename)
-	}
 	// If car has no image set default
-	if len(paths) == 0 {
-		car.Images = append(car.Images, "image-icon.png")
+	if len(car.Images) == 0 {
+		car.Image = fmt.Sprintf("%s%s", uploadPath, "image-icon.png")
+	} else {
+		car.Image = fmt.Sprintf("%s%s", uploadPath, car.Images[0])
 	}
 
 	m.App.Session.Put(r.Context(), "car", car)
@@ -258,6 +252,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 
 	form.Required("first_name", "last_name", "email", "phone")
 	form.IsEmail("email")
+	form.IsNum("phone")
 
 	if !form.Valid() {
 		data := make(map[string]interface{})
@@ -482,11 +477,11 @@ func (m *Repository) AdminEditCar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	paths, _ := filepath.Glob(fmt.Sprintf("%s-*", "./static/images/"+id))
-
-	for _, path := range paths {
-		filename := filepath.Base(path)
-		car.Images = append(car.Images, filename)
+	// If car has no image set default
+	if len(car.Images) == 0 {
+		car.Image = fmt.Sprintf("%s%s", uploadPath, "image-icon.png")
+	} else {
+		car.Image = fmt.Sprintf("%s%s", uploadPath, car.Images[0])
 	}
 
 	data := make(map[string]interface{})
@@ -506,6 +501,9 @@ func (m *Repository) AdminUpdateCar(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
 		return
 	}
+
+	form := forms.New(r.PostForm)
+
 	var car models.Car
 	strID := r.Form.Get("car_id")
 	car.ID, _ = strconv.Atoi(strID)
@@ -523,9 +521,12 @@ func (m *Repository) AdminUpdateCar(w http.ResponseWriter, r *http.Request) {
 	car.Color = r.Form.Get("color")
 	car.Price, _ = strconv.Atoi(r.Form.Get("price"))
 
-	form := forms.New(r.PostForm)
+	if err != nil {
+		form.Errors.Add("price", err.Error())
+	}
 	form.Required("car_name", "brand", "model", "version", "fuel", "power", "gearbox", "made_at",
 		"drive", "combustion", "body", "color", "price")
+
 	form.IsNum("power")
 	if !form.Valid() {
 		data := make(map[string]interface{})
@@ -569,6 +570,8 @@ func (m *Repository) AdminPostCar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	form := forms.New(r.PostForm)
+
 	var car models.Car
 	car.CarName = r.Form.Get("car_name")
 	car.Brand = r.Form.Get("brand")
@@ -582,13 +585,15 @@ func (m *Repository) AdminPostCar(w http.ResponseWriter, r *http.Request) {
 	car.Combustion = r.Form.Get("combustion")
 	car.Body = r.Form.Get("body")
 	car.Color = r.Form.Get("color")
-	car.Price, _ = strconv.Atoi(r.Form.Get("price"))
+	car.Price, err = strconv.Atoi(r.Form.Get("price"))
 
-	form := forms.New(r.PostForm)
+	if err != nil {
+		form.Errors.Add("price", err.Error())
+	}
+
 	form.Required("car_name", "brand", "model", "version", "fuel", "power", "gearbox", "made_at",
 		"drive", "combustion", "body", "color", "price")
 	form.IsNum("power")
-	form.IsNum("price")
 
 	if !form.Valid() {
 		data := make(map[string]interface{})
@@ -705,67 +710,102 @@ func (m *Repository) AdminDeleteRes(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
-// AdminUploadImage uploads an image to a car
+// AdminUploadImage uploads for car images to images folder and saves in db
 func (m *Repository) AdminUploadImage(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseMultipartForm(10 << 20)
-	if err != nil {
-		m.App.Session.Put(r.Context(), "error", err)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-
-	file, _, err := r.FormFile("formFile")
+	files, err := m.UploadFiles(r, uploadPath)
 
 	if err != nil {
-		m.App.Session.Put(r.Context(), "error", err)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	carID := r.Form.Get("car_id")
-
-	defer file.Close()
-
-	paths, _ := filepath.Glob(fmt.Sprintf("%s-*", "./static/images/"+carID))
-	var images []string
-
-	for _, path := range paths {
-		filename := filepath.Base(path)
-		images = append(images, filename)
+	carID, _ := strconv.Atoi(r.Form.Get("car_id"))
+	var image = models.Image{
+		CarID:    carID,
+		Filename: files[0].OrginalFilename,
 	}
 
-	imageNumber := strconv.Itoa(len(images) + 1)
-	tmp, err := ioutil.TempFile("./static/images", carID+"-"+imageNumber+".png")
+	_, err = m.DB.InsertCarImage(image)
 
 	if err != nil {
-		m.App.Session.Put(r.Context(), "error", err)
-		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
-		return
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	defer tmp.Close()
-
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		m.App.Session.Put(r.Context(), "error", err)
-		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
-		return
-	}
-
-	tmp.Write(fileBytes)
-	m.App.Session.Put(r.Context(), "flash", "Image has been uploded")
 	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+}
+
+type UploadedFile struct {
+	OrginalFilename string
+	FileSize        int64
+}
+
+// UploadFiles upload image form form
+func (m *Repository) UploadFiles(r *http.Request, uploadDir string) ([]*UploadedFile, error) {
+	var uploadedFiles []*UploadedFile
+	err := r.ParseMultipartForm(int64(1024 * 1024 * 5))
+
+	if err != nil {
+		return nil, fmt.Errorf("the uploaded file is too big, and must be less than %d bytes", 1024*1024*5)
+	}
+	for _, fHeaders := range r.MultipartForm.File {
+		for _, hdr := range fHeaders {
+			uploadedFiles, err = func(uploadedFiles []*UploadedFile) ([]*UploadedFile, error) {
+				var uploadedFile UploadedFile
+				infile, err := hdr.Open()
+				if err != nil {
+					return nil, err
+				}
+				defer infile.Close()
+
+				uploadedFile.OrginalFilename = hdr.Filename
+
+				var outfile *os.File
+				defer outfile.Close()
+
+				if outfile, err = os.Create(filepath.Join(uploadDir, uploadedFile.OrginalFilename)); err != nil {
+					return nil, err
+				} else {
+					fileSize, err := io.Copy(outfile, infile)
+
+					if err != nil {
+						return nil, err
+					}
+					uploadedFile.FileSize = fileSize
+				}
+
+				uploadedFiles = append(uploadedFiles, &uploadedFile)
+
+				return uploadedFiles, nil
+			}(uploadedFiles)
+			if err != nil {
+				return uploadedFiles, err
+			}
+		}
+	}
+	return uploadedFiles, nil
 }
 
 // AdminDeleteImage deletes an image from car gallery
 func (m *Repository) AdminDeleteImage(w http.ResponseWriter, r *http.Request) {
-	path := r.Form.Get("del_image")
-	err := os.Remove("." + path)
+	name := r.Form.Get("del_image")
+
+	// remove image form db
+	err := m.DB.DeleteImage(name)
+
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", err)
 		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
 		return
 	}
+
+	// remove image from filesystem
+	err = os.Remove(uploadPath + name)
+
+	if err != nil {
+		m.App.Session.Put(r.Context(), "error", err)
+		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+		return
+	}
+
 	m.App.Session.Put(r.Context(), "flash", "Image has been deleted")
 	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
 }

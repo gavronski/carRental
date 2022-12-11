@@ -9,14 +9,6 @@ func (m *testDBRepo) GetAllCars() ([]models.Car, error) {
 	return nil, errors.New("can't find cars")
 }
 
-func (m *testDBRepo) GetCarByName(carName string) (models.Car, error) {
-	var car models.Car
-	if carName != "" {
-		return car, nil
-	}
-	return car, errors.New("no such car")
-}
-
 func (m *testDBRepo) GetCarByID(carID int) (models.Car, error) {
 	var car models.Car
 
@@ -103,6 +95,20 @@ func (m *testDBRepo) GetReservationByID(reservationID int) (models.Reservation, 
 func (m *testDBRepo) DeleteReservation(resID int) error {
 	if resID == 0 {
 		return errors.New("can't delete reservation")
+	}
+	return nil
+}
+
+func (m *testDBRepo) InsertCarImage(image models.Image) (int, error) {
+	if image.Filename == "" {
+		return 0, errors.New("empty image field")
+	}
+	return 1, nil
+}
+
+func (m *testDBRepo) DeleteImage(filename string) error {
+	if filename == "" {
+		return errors.New("empty filename")
 	}
 	return nil
 }

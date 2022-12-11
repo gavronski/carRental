@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/gob"
 	"fmt"
+	"io"
 	"log"
+	"mime/multipart"
 	"myapp/internal/config"
 	"myapp/internal/models"
 	"myapp/internal/render"
@@ -606,7 +609,7 @@ func TestRepository_AdminUpdateCar(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "model=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "version=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "fuel=test")
-	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=test")
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=4")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "gearbox=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "made_at=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "drive=test")
@@ -655,7 +658,7 @@ func TestRepository_AdminUpdateCar(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "model=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "version=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "fuel=test")
-	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=test")
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=23")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "gearbox=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "made_at=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "drive=test")
@@ -683,7 +686,7 @@ func TestRepository_AdminUpdateCar(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "model=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "version=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "fuel=test")
-	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=test")
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=23")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "gearbox=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "made_at=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "drive=test")
@@ -734,7 +737,7 @@ func TestRepository_AdminPostCar(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "model=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "version=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "fuel=test")
-	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=test")
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=90")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "gearbox=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "made_at=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "drive=test")
@@ -803,13 +806,14 @@ func TestRepository_AdminPostCar(t *testing.T) {
 	if rr.Code != http.StatusOK {
 		t.Errorf("AdminPostCar handler returns wrong response code %d", rr.Code)
 	}
+
 	// case with error while adding to db "car.CarName != test"
 	reqBody = "car_name=fox"
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "brand=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "model=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "version=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "fuel=test")
-	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=test")
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "power=23")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "gearbox=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "made_at=test")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "drive=test")
@@ -1107,6 +1111,97 @@ func TestRepository_PostContactUs(t *testing.T) {
 	}
 
 }
+
+func Test_AdminUploadImage(t *testing.T) {
+	uploadPath = "./testdata/images/"
+	filePath := uploadPath + "test-img.jpg"
+	fieldName := "file"
+
+	body := new(bytes.Buffer)
+	mw := multipart.NewWriter(body)
+
+	file, err := os.Open(filePath)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w, err := mw.CreateFormFile(fieldName, filePath)
+
+	if _, err := io.Copy(w, file); err != nil {
+		t.Fatal(err)
+	}
+
+	mw.Close()
+
+	req, err := http.NewRequest(http.MethodPost, "/upload-image", body)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx := req.Context()
+	ctx, _ = session.Load(ctx, req.Header.Get("X-Session"))
+
+	req = req.WithContext(ctx)
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+
+	rr := httptest.NewRecorder()
+
+	handler := http.HandlerFunc(Repo.AdminUploadImage)
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusSeeOther {
+		t.Errorf("wrong response code %d", rr.Code)
+	}
+}
+
+func Test_AdminDeleteImage(t *testing.T) {
+	postForm := url.Values{}
+	postForm.Add("del_image", "test-img copy.jpg")
+
+	req, err := http.NewRequest(http.MethodPost, "/delete-image", strings.NewReader(postForm.Encode()))
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx := req.Context()
+	ctx, _ = session.Load(ctx, req.Header.Get("X-Session"))
+	req = req.WithContext(ctx)
+
+	rr := httptest.NewRecorder()
+
+	handler := http.HandlerFunc(Repo.AdminDeleteImage)
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusSeeOther {
+		t.Errorf("wrong response code %d", rr.Code)
+	}
+
+	postForm = url.Values{}
+	postForm.Add("del_image", "")
+
+	req, err = http.NewRequest(http.MethodPost, "/delete-image", strings.NewReader(postForm.Encode()))
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx = req.Context()
+	ctx, _ = session.Load(ctx, req.Header.Get("X-Session"))
+	req = req.WithContext(ctx)
+
+	rr = httptest.NewRecorder()
+
+	handler = http.HandlerFunc(Repo.AdminDeleteImage)
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusSeeOther {
+		t.Errorf("wrong response code %d", rr.Code)
+	}
+}
+
 func listenForMail() {
 	go func() {
 		for {

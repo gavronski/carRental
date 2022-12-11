@@ -34,6 +34,8 @@ type Car struct {
 	Images     []string
 	Price      int
 	Filename   string
+	CarImages  []Image
+	Image      string
 }
 type Restriction struct {
 	ID              int
@@ -76,4 +78,10 @@ type MailData struct {
 	Subject  string
 	Content  string
 	Template string
+}
+
+type Image struct {
+	ID       int
+	CarID    int
+	Filename string
 }

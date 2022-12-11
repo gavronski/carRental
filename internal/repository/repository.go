@@ -4,7 +4,6 @@ import "myapp/internal/models"
 
 type DatabaseRepo interface {
 	GetAllCars() ([]models.Car, error)
-	GetCarByName(carName string) (models.Car, error)
 	CheckAvailabilityByDate(carID int, startDate, endDate string) (bool, error)
 	GetCarByID(carID int) (models.Car, error)
 	InsertReservation(res models.Reservation) (int, error)
@@ -18,4 +17,6 @@ type DatabaseRepo interface {
 	DeleteCar(carID int) error
 	GetReservationByID(reservationID int) (models.Reservation, error)
 	DeleteReservation(resID int) error
+	InsertCarImage(image models.Image) (int, error)
+	DeleteImage(filename string) error
 }
