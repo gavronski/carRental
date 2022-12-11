@@ -171,7 +171,7 @@
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <button type="button" class="btn btn-outline-danger delete-image-btn" id="{{$i}}-delete-image-btn">Delete</button>
                         </div>
-                        <img src="/static/images/{{$filename}}" class="d-block w-100" id="{{$i}}-delete-image-img"alt="...">
+                        <img src="/static/images/{{$filename}}" name="{{$filename}}" class="d-block w-100" id="{{$i}}-delete-image-img" alt="...">
                     </div>
                      {{end}}
             </div>
@@ -242,8 +242,7 @@
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" /> \
             Select image to upload: \
             <div class="mb-3"> \
-                <label for="formFile" class="form-label">Default file input example</label> \
-                <input class="form-control" type="file" name="formFile" id="formFile"> \
+                <input class="form-control" type="file" name="formFile" id="formFile" required accept="image/gif,image/jpeg,image/png"> \
                 <input hidden class="form-control" type="text" name="car_id" value="' + id +'"> \
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submit-upload">Upload</button> \
                 <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
@@ -270,7 +269,7 @@
             e.preventDefault()
             id = e.target.id.replace("btn", "img")
             img = document.getElementById(id)
-            path = img.getAttribute("src")
+            name = img.getAttribute("name")
 
             modalDelImage = '<div class="modal" id="myModalDelImage" tabindex="-1"> \
 <div class="modal-dialog"> \
@@ -282,7 +281,7 @@
         <form action="/admin/delete-image" method="post"> \
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" /> \
             <div class="mb-3"> \
-                <input hidden class="form-control" type="text" name="del_image" value="' + path +'"> \
+                <input hidden class="form-control" type="text" name="del_image" value="' + name +'"> \
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Delete</button> \
                 <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
             </div> \
