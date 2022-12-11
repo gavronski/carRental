@@ -1,0 +1,5 @@
+create_table("images") {
+  t.Column("id", "integer", {primary:true})
+  t.Column("car_id", "integer", {})
+  t.Column("filename", "string", {})
+}
