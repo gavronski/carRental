@@ -68,6 +68,9 @@ func (f *Form) IsEmail(field string) bool {
 // IsNum checks if given field is a number
 func (f *Form) IsNum(field string) bool {
 	char := []rune(f.Get(field))
+	if len(char) == 0 {
+		return false
+	}
 	if !unicode.IsNumber(char[0]) {
 		f.Errors.Add(field, "This field must be a number")
 		return false
