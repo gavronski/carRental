@@ -28,14 +28,21 @@ var errorLog *log.Logger
 
 func main() {
 	db, err := run()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println(fmt.Sprintf("Starting an app on port num %s", portNumber))
 	// Server settings
 	srv := &http.Server{
 		Addr:    portNumber,
 		Handler: routes(&app),
 	}
+
 	defer db.SQL.Close()
 	defer close(app.MailChan)
+
 	// Start listen
 	listenForMail()
 	err = srv.ListenAndServe()
@@ -58,7 +65,7 @@ func run() (*driver.DB, error) {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal(err)
 	}
 
 	dbName := os.Getenv("DB_NAME")
@@ -89,9 +96,10 @@ func run() (*driver.DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Println("Chache rendering error", err)
+		log.Println("Cache rendering error", err)
 	}
 	app.TemplateCache = tc
 	app.UseCache = useCache
