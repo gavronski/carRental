@@ -1,0 +1,10 @@
+INSERT INTO cars (id, car_name, brand, model, version, made_at, fuel, power, gearbox, drive, combustion, body, color, created_at, updated_at, price) VALUES
+	(1, 'shelby-super-snake', 'Ford Mustang', 'Shelby Super Snake', 'coupe', '2020', 'premium gasoline', '800', 'manual', 'rear-wheel drive', '32l/100km', 'coupe', 'red', '2022-08-02 00:00:00', '2022-12-08 00:08:22.276311', 75),
+	(2, 'gt-eu-spec', 'Ford Mustang', 'GT EU-spec', 'fastback', '2020', 'premium gasoline', '420', 'automatic', 'rear-wheel drive', '11.8l/100km', 'fastback', 'yellow', '2022-08-02 00:00:00', '2022-10-03 01:33:43.655366', 90),
+	(3, 'bullitt', 'Ford Mustang', 'Bullitt', 'copue', '2021', 'premium gasoline', '460', 'automatic', 'rear-wheel drive', '13.4l/100km', 'coupe', 'bottle-green', '2022-08-02 00:00:00', '2022-10-09 22:29:04.991956', 80),
+	(4, 'interior', 'Ford Mustang', 'Interior 1967', 'fastback', '1967', 'gasoline', '271', 'manual', 'rear-wheel drive', '14l/100km', 'fastback', 'black', '2022-08-02 00:00:00', '2022-10-03 01:33:24.947489', 90),
+	(5, 'gt-eu-spec-black', 'Ford Mustang', 'GT EU-spec', 'fastback', '2020', 'premium gasoline', '420', 'manual', 'rear-wheel drive', '13.8l/100km', 'fastback', 'black', '2022-08-02 00:00:00', '2022-10-03 01:33:52.328979', 90),
+	(6, 'mach', 'Ford Mustang', 'Mach-E GT', 'suv', '2020', 'energy', '487', 'automatic', 'rear-wheel drive', '600km', 'suv', 'yellow', '2022-08-02 00:00:00', '2022-10-03 01:33:34.902855', 100),
+	(7, 'shelby500kr', 'Ford Mustang', 'Shelby GT500 KR', 'coupe', '2020', 'premium gasoline', '900', 'automatic', 'rear-wheel drive', '18.9l/100km', 'coupe', 'blue', '2022-08-02 00:00:00', '2022-10-03 01:34:12.448314', 60),
+	(8, 'shelby-gt-h', 'Ford Mustang', 'Shelby GT-H', 'convertible', '2022', 'premium gasoline', '950', 'automatic', 'rear-wheel drive', '21.5l/100km', 'convertible', 'white', '2022-08-02 00:00:00', '2022-10-03 01:35:19.185653', 140),
+	(9, 'mach-blue', 'Ford Mustang', 'Mach-E GT', 'suv', '2022', 'energy', '487', 'automatic', 'rear-wheel drive', '600km', 'suv', 'blue', '2022-08-02 00:00:00', '2022-10-07 00:49:10.311251', 70);
