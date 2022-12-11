@@ -14,7 +14,7 @@ func TestRoutes(t *testing.T) {
 
 	switch v := mux.(type) {
 	case *chi.Mux:
-		// Fne, do nothing
+		// Fine, do nothing
 	default:
 		t.Error(fmt.Sprintf("type is not http.Handler, but is type %s", v))
 	}

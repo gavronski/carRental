@@ -11,7 +11,7 @@ import (
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
-// ListenForMail sets value for message
+// listenForMail sets value for message
 func listenForMail() {
 	go func() {
 		for {
@@ -21,7 +21,7 @@ func listenForMail() {
 	}()
 }
 
-// SendMsg sends email to customer
+// sendMsg sends email to customer
 func sendMsg(m models.MailData) {
 	server := mail.NewSMTPClient()
 	server.Host = "localhost"
