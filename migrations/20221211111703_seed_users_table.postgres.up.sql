@@ -1,2 +1,2 @@
-INSERT INTO tableName (id, first_name, last_name, email, password, access_level, created_at, updated_at) VALUES
+INSERT INTO users (id, first_name, last_name, email, password, access_level, created_at, updated_at) VALUES
 	('1', 'Paul', 'Gavrix', 'admin@admin.com', '$2a$12$aI2cJ823uqA4TB/atn8XWeNVDD8BzAZmx2rbC74dpVyPv6t4JIa5e', '1', '2022-08-01 00:00:00', '2022-08-01 00:00:00');
