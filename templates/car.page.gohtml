@@ -119,10 +119,17 @@
 {{end}}
 {{define "js"}}
 <script>
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth()).padStart(2, '0'); 
+    var yyyy = today.getFullYear();
+    today = new Date(yyyy, mm, dd);
+
     {{$car:= index .Data "car"}}
     price = "{{$car.Price}}"
   
-    const start = datepicker('.start', { id: 1,  formatter: (input, date, instance) => {
+    const start = datepicker('.start', { id: 1, minDate: today,  formatter: (input, date, instance) => {
     const value = date.toLocaleDateString()
     input.value = value // => '1/1/2099'
     }
