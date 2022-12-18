@@ -273,6 +273,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
+	fmt.Println(id)
 	m.App.Session.Put(r.Context(), "reservation", reservation)
 	// restriction := models.CarRescriction{
 	// 	StartDate:     reservation.StartDate,
