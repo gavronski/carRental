@@ -274,21 +274,21 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 
 	}
 	m.App.Session.Put(r.Context(), "reservation", reservation)
-	restriction := models.CarRescriction{
-		StartDate:     reservation.StartDate,
-		EndDate:       reservation.EndDate,
-		CarID:         reservation.CarID,
-		ReservationID: id,
-		RestrictionID: 1,
-		Reservation:   reservation,
-	}
+	// restriction := models.CarRescriction{
+	// 	StartDate:     reservation.StartDate,
+	// 	EndDate:       reservation.EndDate,
+	// 	CarID:         reservation.CarID,
+	// 	ReservationID: id,
+	// 	RestrictionID: 1,
+	// 	Reservation:   reservation,
+	// }
 
-	err = m.DB.InsertCarRestriction(restriction)
-	if err != nil {
-		m.App.Session.Put(r.Context(), "error", "can't insert restriction into database")
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
+	// err = m.DB.InsertCarRestriction(restriction)
+	// if err != nil {
+	// 	m.App.Session.Put(r.Context(), "error", "can't insert restriction into database")
+	// 	http.Redirect(w, r, "/", http.StatusSeeOther)
+	// 	return
+	// }
 	// Email content
 	content := fmt.Sprintf("<h1>Hi, %s %s!</h1></br>Your car rent is confirmed.</br>Rent info: </br> <ul><li>Start date: %s</li><li>End date: %s</li></ul>", reservation.FirstName, reservation.LastName, reservation.StartDate, reservation.EndDate)
 	msg := models.MailData{
