@@ -181,7 +181,7 @@
 {{end}}
 {{define "js"}}
 <script>
-    id = document.getElementById('car_id').value
+    carID = document.getElementById('car_id').value
     modal = '<div class="modal" id="myModal" tabindex="-1"> \
 <div class="modal-dialog"> \
     <div class="modal-content"> \
@@ -221,7 +221,7 @@
         
         $.ajax({
             type: "post",
-            url: "/admin/cars/delete/" + id,
+            url: "/admin/cars/delete/" + carID,
             success: function (resp) {
                 if (resp.ok) {
                     window.location.href = "/admin/cars"
@@ -243,7 +243,7 @@
             Select image to upload: \
             <div class="mb-3"> \
                 <input class="form-control" type="file" name="formFile" id="formFile" required accept="image/gif,image/jpeg,image/png"> \
-                <input hidden class="form-control" type="text" name="car_id" value="' + id +'"> \
+                <input hidden class="form-control" type="text" name="car_id" value="' + carID +'"> \
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="submit-upload">Upload</button> \
                 <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
             </div> \
@@ -270,17 +270,27 @@
             id = e.target.id.replace("btn", "img")
             img = document.getElementById(id)
             name = img.getAttribute("name")
+            carID = document.getElementById('car_id').value
 
             modalDelImage = '<div class="modal" id="myModalDelImage" tabindex="-1"> \
 <div class="modal-dialog"> \
     <div class="modal-content"> \
       <div class="modal-header justify-content-center"> \
-        <h6 class="modal-title">Delete an image?</h6> \
+        <div class="col"> \
+        <div class="row"> \
+            <h5 class="modal-title">Delete an image?</h5> \
+        </div> \
+        <br /> \
+        <div class="row"> \
+            <h6 class="modal-title">If car has only default image, it will be automatically restored.</h6> \
+        </div> \
+        </div> \
       </div> \
       <div class="modal-body"> \
         <form action="/admin/delete-image" method="post"> \
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" /> \
             <div class="mb-3"> \
+                <input hidden class="form-control" type="text" name="car_id" value="' + carID +'"> \
                 <input hidden class="form-control" type="text" name="del_image" value="' + name +'"> \
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Delete</button> \
                 <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button> \
