@@ -605,7 +605,21 @@ func (m *Repository) AdminPostCar(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	err = m.DB.AddCar(car)
+	carID, err := m.DB.AddCar(car)
+
+	if err != nil {
+		m.App.Session.Put(r.Context(), "error", err)
+		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+		return
+	}
+
+	defaultImage := "image-icon.png"
+	var image = models.Image{
+		CarID:    carID,
+		Filename: defaultImage,
+	}
+
+	_, err = m.DB.InsertCarImage(image)
 
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", err)
@@ -787,9 +801,11 @@ func (m *Repository) UploadFiles(r *http.Request, uploadDir string) ([]*Uploaded
 // AdminDeleteImage deletes an image from car gallery
 func (m *Repository) AdminDeleteImage(w http.ResponseWriter, r *http.Request) {
 	name := r.Form.Get("del_image")
+	id := r.Form.Get("car_id")
+	carID, _ := strconv.Atoi(id)
 
 	// remove image form db
-	err := m.DB.DeleteImage(name)
+	err := m.DB.DeleteImage(carID, name)
 
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", err)
@@ -798,12 +814,40 @@ func (m *Repository) AdminDeleteImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove image from filesystem
-	err = os.Remove(uploadPath + name)
+	if name != "image-icon.png" {
+		err = os.Remove(uploadPath + name)
+
+		if err != nil {
+			m.App.Session.Put(r.Context(), "error", err)
+			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+			return
+		}
+	}
+
+	// check count of car images
+	num, err := m.DB.GetImagesNumber(carID)
 
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", err)
 		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
 		return
+	}
+
+	//if car has no image set default image
+	if num == 0 {
+		defaultImage := "image-icon.png"
+		var image = models.Image{
+			CarID:    carID,
+			Filename: defaultImage,
+		}
+
+		_, err = m.DB.InsertCarImage(image)
+
+		if err != nil {
+			m.App.Session.Put(r.Context(), "error", err)
+			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+			return
+		}
 	}
 
 	m.App.Session.Put(r.Context(), "flash", "Image has been deleted")
