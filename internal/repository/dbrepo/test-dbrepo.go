@@ -70,11 +70,11 @@ func (m *testDBRepo) UpdateCar(car models.Car) error {
 
 	return nil
 }
-func (m *testDBRepo) AddCar(car models.Car) error {
+func (m *testDBRepo) AddCar(car models.Car) (int, error) {
 	if car.CarName != "test" {
-		return errors.New("can't add a car")
+		return 0, errors.New("can't add a car")
 	}
-	return nil
+	return 1, nil
 }
 
 func (m *testDBRepo) DeleteCar(carID int) error {
@@ -106,9 +106,13 @@ func (m *testDBRepo) InsertCarImage(image models.Image) (int, error) {
 	return 1, nil
 }
 
-func (m *testDBRepo) DeleteImage(filename string) error {
+func (m *testDBRepo) DeleteImage(carID int, filename string) error {
 	if filename == "" {
 		return errors.New("empty filename")
 	}
 	return nil
+}
+
+func (m *testDBRepo) GetImagesNumber(carID int) (int, error) {
+	return 0, nil
 }

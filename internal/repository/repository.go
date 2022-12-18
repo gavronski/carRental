@@ -13,10 +13,11 @@ type DatabaseRepo interface {
 	Authenticate(email, testPassword string) (int, string, error)
 	GetReservations() ([]models.Reservation, error)
 	UpdateCar(car models.Car) error
-	AddCar(car models.Car) error
+	AddCar(car models.Car) (int, error)
 	DeleteCar(carID int) error
 	GetReservationByID(reservationID int) (models.Reservation, error)
 	DeleteReservation(resID int) error
 	InsertCarImage(image models.Image) (int, error)
-	DeleteImage(filename string) error
+	DeleteImage(carID int, filename string) error
+	GetImagesNumber(carID int) (int, error)
 }

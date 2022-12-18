@@ -229,20 +229,20 @@ func (m *postgresDBRepo) UpdateCar(car models.Car) error {
 }
 
 // AddCar adds new car data by admin
-func (m *postgresDBRepo) AddCar(car models.Car) error {
+func (m *postgresDBRepo) AddCar(car models.Car) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	id, err := m.GetMaxCarID()
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 	id = id + 1
 
 	power, _ := strconv.Atoi(car.Power)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	stmt := `insert into cars(
@@ -270,13 +270,13 @@ func (m *postgresDBRepo) AddCar(car models.Car) error {
 	)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return id, nil
 }
 
-// AddCar adds new car data by admin
+// DeleteCar adds new car data by admin
 func (m *postgresDBRepo) DeleteCar(carID int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -582,17 +582,35 @@ func (m *postgresDBRepo) InsertCarImage(image models.Image) (int, error) {
 	return newID, nil
 }
 
-func (m *postgresDBRepo) DeleteImage(filename string) error {
+func (m *postgresDBRepo) DeleteImage(carID int, filename string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	stmt := `delete from images where filename = $1`
+	stmt := `delete from images where filename = $1 and car_id = $2`
 
-	_, err := m.DB.ExecContext(ctx, stmt, filename)
+	_, err := m.DB.ExecContext(ctx, stmt, filename, carID)
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (m *postgresDBRepo) GetImagesNumber(carID int) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var id int
+	query := `select count(id) from images where car_id = $1;`
+	row := m.DB.QueryRowContext(ctx, query, carID)
+	err := row.Scan(
+		&id,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
