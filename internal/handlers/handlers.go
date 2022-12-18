@@ -265,7 +265,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := m.DB.InsertReservation(reservation)
+	_, err = m.DB.InsertReservation(reservation)
 	if err != nil {
 
 		m.App.Session.Put(r.Context(), "error", "can't insert reservation into database")
@@ -273,7 +273,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	fmt.Println(id)
+
 	m.App.Session.Put(r.Context(), "reservation", reservation)
 	// restriction := models.CarRescriction{
 	// 	StartDate:     reservation.StartDate,
