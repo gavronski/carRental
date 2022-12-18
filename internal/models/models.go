@@ -36,7 +36,7 @@ type Car struct {
 	Filename   string
 	CarImages  []Image
 	Image      string
-}
+} 
 type Restriction struct {
 	ID              int
 	RestrictionName string
