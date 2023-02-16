@@ -9,7 +9,8 @@ My first project written in Go wtih Postgres. Simple web app that you can book a
 Quick intro how it works.
 
 Credentials for admin panel: 
-email: admin@admin.com
+
+email: admin@admin.com 
 password: admin
 ![](https://github.com/gavronski/carRental/blob/main/intro-movie/carrental.gif)
 
