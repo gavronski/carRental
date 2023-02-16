@@ -12,11 +12,13 @@ Quick intro how it works.
 
 Link onilne (sending mail is not set up on the server)
 
+https://194-233-162-29.ip.linodeusercontent.com/
+
 Credentials for the admin panel: 
 
 email: admin@admin.com 
 password: admin
-https://194-233-162-29.ip.linodeusercontent.com/
+
 
 ## Installation
 
