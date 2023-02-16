@@ -42,7 +42,7 @@ or
 ```bash
   ./app.exe
 ```
-
+Make sure that you have installed and run MailHog (https://github.com/mailhog/MailHog/releases/v1.0.0).
 
 ## Running Tests
 
