@@ -46,9 +46,16 @@ Make sure that you have installed and run MailHog (https://github.com/mailhog/Ma
 
 ## Running Tests
 
-To run unit tests, run the following command
+To run all unit tests, run the following command from "carRenta" directory.
 
 ```bash
   go test -v ./...
+```
+
+To see tests coverage, change directory and run commands (for Windows):
+
+```bash
+  go test --coverprofile=coverage.out
+  go tool cover --html=coverage.out
 ```
 
