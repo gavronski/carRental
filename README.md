@@ -20,9 +20,9 @@ Download the app
 ```bash
   git clone https://github.com/gavronski/carRental.git
 ```
-Add .env and database.yml files. Create postgres connection on your client and create the database compatible with settings.
+Add .env and database.yml files. Create postgres connection on your client and create the database, compatible with settings.
 
-Run migrations and seed tables with soda, from the root directory.
+Run migrations and seed tables with soda, from the "carRental" directory.
 
 ```bash
   soda migrate
