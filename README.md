@@ -8,14 +8,14 @@ My first project written in Go wtih Postgres. Layouts have been done with Bootst
 
 Quick intro how it works.
 
-Credentials for the admin panel: 
-
-email: admin@admin.com 
-password: admin
 ![](https://github.com/gavronski/carRental/blob/main/intro-movie/carrental.gif)
 
 Link onilne (sending mail is not set up on the server)
 
+Credentials for the admin panel: 
+
+email: admin@admin.com 
+password: admin
 https://194-233-162-29.ip.linodeusercontent.com/
 
 ## Installation
