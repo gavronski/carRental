@@ -22,20 +22,20 @@ password: admin
 
 ## Installation
 
-Download the app 
+1. Download the app 
 
 ```bash
   git clone https://github.com/gavronski/carRental.git
 ```
-Add .env and database.yml files. Create postgres connection on your client and create the database, compatible with settings.
+2. Add .env and database.yml files. Create postgres connection on your client and create the database, compatible with settings.
 
-Run migrations and seed tables with soda, from the "carRental" directory.
+3. Run migrations and seed tables with soda, from the "carRental" directory.
 
 ```bash
   soda migrate
 ```
 
-Run the app. 
+4. Run the app. 
 ```bash
   go run ./cmd/web
 ```
