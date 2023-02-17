@@ -48,7 +48,7 @@ Make sure that you have installed and run MailHog (https://github.com/mailhog/Ma
 
 ## Running Tests
 
-To run all unit tests, run the following command from "carRenta" directory.
+To run all unit tests, run the following command from "carRental" directory.
 
 ```bash
   go test -v ./...
