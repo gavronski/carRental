@@ -1,7 +1,7 @@
 
 # Car rental system
 
-My first project written in Go wtih Postgres. Layouts have been done with Bootstrap 5 and Sweetalert2. For database management, I'd been using Soda CLI. Car rental is a simple web app that you can book a car in a few steps. The admin panel is done for creating new car offers, editing existing ones, listing and canceling reservations.
+My first project written in Go with Postgres. Layouts have been done with Bootstrap 5 and Sweetalert2. For database management, I've been using Soda CLI. Car rental is a simple web app that you can book a car in a few steps. The admin panel is done for creating new car offers, editing existing ones, listing and canceling reservations.
 
 
 ## Demo
